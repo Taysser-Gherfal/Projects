@@ -1,6 +1,8 @@
 # pip install pyperclip
+# pip install tabulate
 
 import os, time, pickle, pyperclip, webbrowser
+from tabulate import tabulate
 
 def store_url(project_path):
     with open(project_path + "/url.p", "wb") as myfile:
@@ -47,16 +49,21 @@ def open_urls(urls):
                 print(url)
 
 
+# Setting the project directory
 dir_path = os.path.dirname(os.path.realpath(__file__)) + '\\data'
-print(os.path.dirname(os.path.realpath(__file__)))
 f = folders(dir_path)
 
+# The main loop
 while True:
         print("==========================================")
 
+        table = []
         for counter, i in enumerate(f):
-                print(str(counter) + ' - ' + i['path'].replace(dir_path + "\\", '') + ' - ' + str(len(read_url(i['path'])) - 1) + ' --- ' + i['date'])
+                #print(str(counter) + ' - ' + i['path'].replace(dir_path + "\\", '') + ' - ' + str(len(read_url(i['path'])) - 1) + ' --- ' + i['date'])
+                row = [counter, i['path'].replace(dir_path + "\\", ''), len(read_url(i['path'])) - 1, i['date']]
+                table.append(row)
 
+        print(tabulate(table, headers=['#', 'Name', '# URLs', 'Last Changed'], tablefmt='orgtbl'))
         print("==========================================")
         print("What would you like to do?")
         print("(s-#) Save URLs to an existing project?")

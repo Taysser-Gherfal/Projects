@@ -6,7 +6,7 @@ from tabulate import tabulate
 from os import path
 
 def store_url(project_path):
-    with open(project_path + "/url.p", "wb") as myfile:
+    with open(project_path + "/URLs.p", "wb") as myfile:
         urls = pyperclip.paste()
         mylist = []
         mylist = urls.split("\n")
@@ -14,15 +14,15 @@ def store_url(project_path):
 
 def read_url(project_path):
     # if url.p exists open it
-    if path.exists(project_path + "/url.p"):
-        with open(project_path + "/url.p", "rb") as myfile:
+    if path.exists(project_path + "/URLs.p"):
+        with open(project_path + "/URLs.p", "rb") as myfile:
             urls = pickle.load(myfile)
     # if not create it
     else:
-        with open(project_path + "/url.p", "wb") as myfile:
+        with open(project_path + "/URLs.p", "wb") as myfile:
             mylist = ['']
             pickle.dump(mylist, myfile)
-        with open(project_path + "/url.p", "rb") as myfile:
+        with open(project_path + "/URLs.p", "rb") as myfile:
             urls = pickle.load(myfile)
     
     return urls
@@ -67,7 +67,8 @@ f = folders(dir_path)
 
 # The main loop
 while True:
-        print("")
+        # Clear the commandline 
+        os.system('cls')
 
         table = []
         for counter, i in enumerate(f):
@@ -82,7 +83,7 @@ while True:
         print("(any) To quit")
         print("------------------------------------------")
         
-        answer = input("Your Answer: ")
+        answer = input("Your Command: ")
 
         if answer[0] == "s":
                 try:

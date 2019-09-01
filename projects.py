@@ -13,9 +13,11 @@ def store_url(project_path):
         pickle.dump(mylist, myfile)
 
 def read_url(project_path):
+    # if url.p exists open it
     if path.exists(project_path + "/url.p"):
         with open(project_path + "/url.p", "rb") as myfile:
             urls = pickle.load(myfile)
+    # if not create it
     else:
         with open(project_path + "/url.p", "wb") as myfile:
             mylist = ['']
@@ -41,18 +43,19 @@ def folders(dir_path):
 
 def open_urls(urls):
         # MacOS
-        #chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
-
-        # Windows
-        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-
+        # chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
         # Linux
         # chrome_path = '/usr/bin/google-chrome %s'
 
+        # Chrome path on Windows
+        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+
+        # Opening a new Chrome window and giving it time to open
         DETACHED_PROCESS = 0x00000008
         subprocess.Popen(chrome_path, creationflags=DETACHED_PROCESS)
         time.sleep(2)
 
+        # Open urls in taps
         for i in urls[:-1]:
                 url = i
                 webbrowser.get(chrome_path).open(url)

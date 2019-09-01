@@ -7,10 +7,10 @@ from os import path
 
 def store_url(project_path):
     with open(project_path + "/URLs.p", "wb") as myfile:
-        urls = pyperclip.paste()
-        mylist = []
-        mylist = urls.split("\n")
-        pickle.dump(mylist, myfile)
+            urls = pyperclip.paste()
+            mylist = []
+            mylist = urls.split("\n")
+            pickle.dump(mylist, myfile)
 
 def read_url(project_path):
     # if url.p exists open it
@@ -61,12 +61,20 @@ def open_urls(urls):
                 webbrowser.get(chrome_path).open(url)
 
 
-# Setting the project directory
-dir_path = os.path.dirname(os.path.realpath(__file__)) + '\\data'
-f = folders(dir_path)
 
 # The main loop
 while True:
+
+        # Setting the project directory
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        if path.exists(dir_path + "/data"):
+                dir_path = os.path.dirname(os.path.realpath(__file__)) + '\\data'
+                f = folders(dir_path)
+        else:
+                os.makedirs(dir_path + "/data")
+                dir_path = os.path.dirname(os.path.realpath(__file__)) + '\\data'
+                f = folders(dir_path)
+
         # Clear the commandline 
         os.system('cls')
 
@@ -81,24 +89,35 @@ while True:
         print("(s-#) Save URLs to an existing project?")
         print("(o-#) Open URLs of an existing project?")
         print("(fld) Open project folder")
+        print("(ref) Refreshs list")
         print("(any) To quit")
         print("------------------------------------------")
         
         answer = input("Your Command: ")
 
+        # save project
         if answer[0] == "s":
                 try:
                         project_number = answer[2:]
                         store_url(f[int(project_number)]['path'])
                 except:
                         print("There was no project number")
+        
+        # open project
         elif answer[0] == "o":
                 try:
                         project_number = answer[2:]
                         open_urls(read_url(f[int(project_number)]['path']))
                 except:
                         print("There was no project number")
+        
+        # open folder path
         elif answer == "fld":
                 subprocess.call("explorer "+dir_path, shell=True)
+        
+        # Refresh project list, by continuing the loop
+        elif answer == "ref":
+                continue
+        
         else:
                 exit()

@@ -80,6 +80,7 @@ while True:
         print("==========================================")
         print("(s-#) Save URLs to an existing project?")
         print("(o-#) Open URLs of an existing project?")
+        print("(fld) Open project folder")
         print("(any) To quit")
         print("------------------------------------------")
         
@@ -97,5 +98,7 @@ while True:
                         open_urls(read_url(f[int(project_number)]['path']))
                 except:
                         print("There was no project number")
+        elif answer == "fld":
+                subprocess.call("explorer "+dir_path, shell=True)
         else:
                 exit()

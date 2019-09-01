@@ -1,8 +1,9 @@
 # pip install pyperclip
 # pip install tabulate
 
-import os, time, pickle, pyperclip, webbrowser
+import os, time, pickle, pyperclip, webbrowser, subprocess
 from tabulate import tabulate
+from os import path
 
 def store_url(project_path):
     with open(project_path + "/url.p", "wb") as myfile:
@@ -12,8 +13,15 @@ def store_url(project_path):
         pickle.dump(mylist, myfile)
 
 def read_url(project_path):
-    with open(project_path + "/url.p", "rb") as myfile:
-        urls = pickle.load(myfile)
+    if path.exists(project_path + "/url.p"):
+        with open(project_path + "/url.p", "rb") as myfile:
+            urls = pickle.load(myfile)
+    else:
+        with open(project_path + "/url.p", "wb") as myfile:
+            mylist = ['']
+            pickle.dump(mylist, myfile)
+        with open(project_path + "/url.p", "rb") as myfile:
+            urls = pickle.load(myfile)
     
     return urls
 
@@ -32,21 +40,22 @@ def folders(dir_path):
 
 
 def open_urls(urls):
-        
+        # MacOS
+        #chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
+
+        # Windows
+        chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
+
+        # Linux
+        # chrome_path = '/usr/bin/google-chrome %s'
+
+        DETACHED_PROCESS = 0x00000008
+        subprocess.Popen(chrome_path, creationflags=DETACHED_PROCESS)
+        time.sleep(2)
+
         for i in urls[:-1]:
                 url = i
-
-                # MacOS
-                #chrome_path = 'open -a /Applications/Google\ Chrome.app %s'
-
-                # Windows
-                chrome_path = 'C:/Program Files (x86)/Google/Chrome/Application/chrome.exe %s'
-
-                # Linux
-                # chrome_path = '/usr/bin/google-chrome %s'
-
                 webbrowser.get(chrome_path).open(url)
-                print(url)
 
 
 # Setting the project directory
@@ -55,7 +64,7 @@ f = folders(dir_path)
 
 # The main loop
 while True:
-        print("==========================================")
+        print("")
 
         table = []
         for counter, i in enumerate(f):
@@ -65,7 +74,6 @@ while True:
 
         print(tabulate(table, headers=['#', 'Name', '# URLs', 'Last Changed'], tablefmt='orgtbl'))
         print("==========================================")
-        print("What would you like to do?")
         print("(s-#) Save URLs to an existing project?")
         print("(o-#) Open URLs of an existing project?")
         print("(any) To quit")
